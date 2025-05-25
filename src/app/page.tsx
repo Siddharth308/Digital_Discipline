@@ -1,95 +1,88 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+// app/page.tsx
+'use client';
+
+import { Button, Typography, Row, Col, Card } from 'antd';
+import { motion } from 'framer-motion';
+import styles from './page.module.css';
+import 'antd/dist/reset.css';
+
+
+const { Title, Paragraph } = Typography;
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main style={{ background: '#eef2f6', padding: '3rem 2rem' }}>
+      {/* Hero Section */}
+      <Row justify="center" align="middle" style={{ minHeight: '60vh', textAlign: 'center' }}>
+        <Col span={18}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Title style={{ fontSize: '3rem' }}>Take Control of Your Digital Life</Title>
+            <Paragraph style={{ fontSize: '1.2rem', color: '#666' }}>
+              A simple guide-based tool to help you set digital boundaries, reduce screen time, and build focus — without installing blockers.
+            </Paragraph>
+            <Button type="primary" size="large" style={{ marginTop: '1.5rem' }}>
+              Get Started
+            </Button>
+          </motion.div>
+        </Col>
+      </Row>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      {/* Why It Matters Section */}
+      <Row justify="center" style={{ marginTop: '4rem' }} gutter={32}>
+        <Col span={18}>
+          <Title level={3}>Is this you?</Title>
+          <Paragraph>- You check Instagram every few minutes without thinking.</Paragraph>
+          <Paragraph>- You’ve set Screen Time limits… and ignored them.</Paragraph>
+          <Paragraph>- You feel guilt after binge-watching reels or visiting sites you wish you hadn't.</Paragraph>
+        </Col>
+      </Row>
+
+      {/* How It Works */}
+      <Row justify="center" gutter={[32, 32]} style={{ marginTop: '4rem' }}>
+        <Col xs={24} md={8}>
+          <Card hoverable>
+            <Title level={4}>1. Choose Your Device</Title>
+            <Paragraph>Select iPhone, Android, Mac, Windows, or Chrome.</Paragraph>
+          </Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card hoverable>
+            <Title level={4}>2. Follow the Setup Guide</Title>
+            <Paragraph>We walk you through how to restrict or block distractions using built-in tools.</Paragraph>
+          </Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card hoverable>
+            <Title level={4}>3. Track Your Progress</Title>
+            <Paragraph>Use our simple tracker to log focus days and monitor your growth.</Paragraph>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Preview / Demo Section */}
+      <Row justify="center" gutter={[32, 32]} style={{ marginTop: '4rem' }}>
+        <Col xs={24} md={8}>
+          <Card cover={<img alt="iPhone Guide" src="/iphone_guide.png" />}>iPhone Screen Time Guide</Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card cover={<img alt="Tracker UI" src="/habit_tracker.png" />}>Daily Habit Tracker</Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card cover={<img alt="Reflection Prompt" src="/reflection_prompt.png" />}>Reflection Journal Prompt</Card>
+        </Col>
+      </Row>
+
+      {/* CTA Footer */}
+      <Row justify="center" style={{ marginTop: '4rem', textAlign: 'center' }}>
+        <Col span={18}>
+          <Title level={3}>Ready to reclaim your focus?</Title>
+          <Button type="primary" size="large">Start Now</Button>
+        </Col>
+      </Row>
+    </main>
   );
 }
