@@ -5,6 +5,7 @@ import { Button, Typography, Row, Col, Card } from 'antd';
 import { motion } from 'framer-motion';
 import styles from './page.module.css';
 import 'antd/dist/reset.css';
+import MyCard from './components/MyCard';
 
 
 const { Title, Paragraph } = Typography;
@@ -69,7 +70,7 @@ export default function Home() {
           <Card cover={<img alt="iPhone Guide" src="/iphone_guide.png" />}>iPhone Screen Time Guide</Card>
         </Col>
         <Col xs={24} md={8}>
-          <Card cover={<img alt="Tracker UI" src="/habit_tracker.png" />}>Daily Habit Tracker</Card>
+          <MyCard/>
         </Col>
         <Col xs={24} md={8}>
           <Card cover={<img alt="Reflection Prompt" src="/reflection_prompt.png" />}>Reflection Journal Prompt</Card>
@@ -80,7 +81,7 @@ export default function Home() {
       <Row justify="center" style={{ marginTop: '4rem', textAlign: 'center' }}>
         <Col span={18}>
           <Title level={3}>Ready to reclaim your focus?</Title>
-          <Button type="primary" size="large">Start Now</Button>
+          <Button onClick={() => console.log('Hitting here')} type="primary" size="large">Start Now</Button>
         </Col>
       </Row>
     </main>
