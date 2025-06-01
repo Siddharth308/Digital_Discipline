@@ -61,7 +61,7 @@ const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName }) => {
       initialBreakDates.forEach(d => (defaultBreaks[d] = 'Felt tired'));
       setBreakDates(defaultBreaks);
     }
-  }, [habitName,initialBreakDates]);
+  }, [habitName]);
 
   useEffect(() => {
     localStorage.setItem(`${habitName}-streaks`, JSON.stringify(streakDates));
