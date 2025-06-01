@@ -3,7 +3,7 @@
 
 import { Button, Typography, Row, Col, Card } from 'antd';
 import { motion } from 'framer-motion';
-import styles from './page.module.css';
+// import styles from './page.module.css';
 import 'antd/dist/reset.css';
 import MyCard from './components/MyCard';
 
@@ -38,7 +38,7 @@ export default function Home() {
           <Title level={3}>Is this you?</Title>
           <Paragraph>- You check Instagram every few minutes without thinking.</Paragraph>
           <Paragraph>- You’ve set Screen Time limits… and ignored them.</Paragraph>
-          <Paragraph>- You feel guilt after binge-watching reels or visiting sites you wish you hadn't.</Paragraph>
+          <Paragraph>- You feel guilt after binge-watching reels or visiting sites you wish you hadn’t.</Paragraph>
         </Col>
       </Row>
 
