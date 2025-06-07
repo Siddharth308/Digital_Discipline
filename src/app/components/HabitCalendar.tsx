@@ -12,13 +12,7 @@ import './HabitCalendar.css';
 const { Option } = Select;
 const { Title, Text } = Typography;
 
-interface HabitCalendarProps {
-  habitName: string;
-  initialStreakDates?: string[];
-  initialBreakDates?: string[];
-}
-
-const relapseReasons = [
+const defaultRelapseReasons = [
   'Felt tired',
   'Too busy',
   'Lost motivation',
@@ -26,7 +20,16 @@ const relapseReasons = [
   'Other'
 ];
 
-const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName }) => {
+interface HabitCalendarProps {
+  habitName: string;
+  initialStreakDates?: string[];
+  initialBreakDates?: string[];
+  habitKey: string;
+  relapseReasons?: string[];
+}
+
+const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName, habitKey, relapseReasons = defaultRelapseReasons }) => {
+
   const generateInitialStreak = () => {
     const dates: string[] = [];
     for (let i = 10; i >= 1; i--) {
@@ -36,7 +39,7 @@ const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName }) => {
   };
 
   const initialStreakDates = generateInitialStreak();
-  const initialBreakDates = [dayjs().format('YYYY-MM-DD')];
+  // const initialBreakDates = [dayjs().format('YYYY-MM-DD')];
 
   const [streakDates, setStreakDates] = useState<string[]>([]);
   const [breakDates, setBreakDates] = useState<Record<string, string>>({});
@@ -47,26 +50,26 @@ const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName }) => {
   const [currentMonth, setCurrentMonth] = useState(dayjs());
 
   useEffect(() => {
-    localStorage.removeItem(`${habitName}-streaks`);
-    localStorage.removeItem(`${habitName}-breaks`);
+    localStorage.removeItem(`${habitKey}-streaks`);
+    localStorage.removeItem(`${habitKey}-breaks`);
 
-    const storedStreak = localStorage.getItem(`${habitName}-streaks`);
-    const storedBreaks = localStorage.getItem(`${habitName}-breaks`);
+    const storedStreak = localStorage.getItem(`${habitKey}-streaks`);
+    const storedBreaks = localStorage.getItem(`${habitKey}-breaks`);
     if (storedStreak) setStreakDates(JSON.parse(storedStreak));
     else setStreakDates(initialStreakDates);
 
     if (storedBreaks) setBreakDates(JSON.parse(storedBreaks));
     else {
-      const defaultBreaks: Record<string, string> = {};
-      initialBreakDates.forEach(d => (defaultBreaks[d] = 'Felt tired'));
-      setBreakDates(defaultBreaks);
+      // const defaultBreaks: Record<string, string> = {};
+      // initialBreakDates.forEach(d => (defaultBreaks[d] = 'Felt tired'));
+      // setBreakDates(defaultBreaks);
     }
-  }, [habitName]);
+  }, [habitKey]);
 
   useEffect(() => {
-    localStorage.setItem(`${habitName}-streaks`, JSON.stringify(streakDates));
-    localStorage.setItem(`${habitName}-breaks`, JSON.stringify(breakDates));
-  }, [streakDates, breakDates, habitName]);
+    localStorage.setItem(`${habitKey}-streaks`, JSON.stringify(streakDates));
+    localStorage.setItem(`${habitKey}-breaks`, JSON.stringify(breakDates));
+  }, [streakDates, breakDates, habitKey]);
 
   const isStreakDay = (date: Dayjs) => streakDates.includes(date.format('YYYY-MM-DD'));
   const isBreakDay = (date: Dayjs) => Object.keys(breakDates).includes(date.format('YYYY-MM-DD'));
@@ -143,14 +146,16 @@ const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName }) => {
   };
 
   const currentStreak = useMemo(() => {
-    // const sortedDates = [...streakDates].sort();
+   
     let count = 0;
-    let day = dayjs();
+    let day = dayjs().subtract(1, 'day'); // start from yesterday
+    console.log('streakDates:', streakDates);
     while (streakDates.includes(day.format('YYYY-MM-DD'))) {
       count++;
       day = day.subtract(1, 'day');
     }
     return count;
+
   }, [streakDates]);
 
   return (

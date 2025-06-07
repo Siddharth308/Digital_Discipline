@@ -1,5 +1,6 @@
 'use client';
 //TODO: Make this card a generic one , so that we can use it for other purposes as well
+
 import { useState } from 'react';
 import { Card, Modal } from 'antd';
 import HabitCalendar from './HabitCalendar';
@@ -25,10 +26,12 @@ export default function MyCard() {
         width={900}
       >
             <HabitCalendar
-      habitName="Read on Kindle"
-      initialStreakDates={['2025-05-23', '2025-05-24', '2025-05-25']}
-      initialBreakDates={['2025-05-26']}
-    />
+              habitName="Read on Kindle"
+              habitKey="read-on-kindle"
+              // initialStreakDates={['2025-05-23', '2025-05-24', '2025-05-25']}
+              // initialBreakDates={['2025-05-26']}
+            />
+
 
       </Modal>
     </>
