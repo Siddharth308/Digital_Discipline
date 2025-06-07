@@ -3,7 +3,6 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { Calendar, Modal, Button, Input, Select, Typography, Tooltip, Space } from 'antd';
-import type { CalendarProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import { LeftOutlined, RightOutlined, UndoOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
@@ -22,24 +21,15 @@ const defaultRelapseReasons = [
 
 interface HabitCalendarProps {
   habitName: string;
-  initialStreakDates?: string[];
-  initialBreakDates?: string[];
   habitKey: string;
   relapseReasons?: string[];
+  initialStreakDates?: string[];
 }
 
 const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName, habitKey, relapseReasons = defaultRelapseReasons }) => {
-
   const generateInitialStreak = () => {
-    const dates: string[] = [];
-    for (let i = 10; i >= 1; i--) {
-      dates.push(dayjs().subtract(i, 'day').format('YYYY-MM-DD'));
-    }
-    return dates;
+    return Array.from({ length: 10 }, (_, i) => dayjs().subtract(10 - i, 'day').format('YYYY-MM-DD'));
   };
-
-  const initialStreakDates = generateInitialStreak();
-  // const initialBreakDates = [dayjs().format('YYYY-MM-DD')];
 
   const [streakDates, setStreakDates] = useState<string[]>([]);
   const [breakDates, setBreakDates] = useState<Record<string, string>>({});
@@ -50,19 +40,21 @@ const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName, habitKey, rela
   const [currentMonth, setCurrentMonth] = useState(dayjs());
 
   useEffect(() => {
-    localStorage.removeItem(`${habitKey}-streaks`);
-    localStorage.removeItem(`${habitKey}-breaks`);
-
     const storedStreak = localStorage.getItem(`${habitKey}-streaks`);
     const storedBreaks = localStorage.getItem(`${habitKey}-breaks`);
-    if (storedStreak) setStreakDates(JSON.parse(storedStreak));
-    else setStreakDates(initialStreakDates);
 
-    if (storedBreaks) setBreakDates(JSON.parse(storedBreaks));
-    else {
-      // const defaultBreaks: Record<string, string> = {};
-      // initialBreakDates.forEach(d => (defaultBreaks[d] = 'Felt tired'));
-      // setBreakDates(defaultBreaks);
+    try {
+      const parsedStreak = storedStreak ? JSON.parse(storedStreak) : [];
+      setStreakDates(parsedStreak.length > 0 ? parsedStreak : generateInitialStreak());
+    } catch {
+      setStreakDates(generateInitialStreak());
+    }
+
+    try {
+      const parsedBreaks = storedBreaks ? JSON.parse(storedBreaks) : {};
+      setBreakDates(parsedBreaks);
+    } catch {
+      setBreakDates({});
     }
   }, [habitKey]);
 
@@ -74,7 +66,7 @@ const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName, habitKey, rela
   const isStreakDay = (date: Dayjs) => streakDates.includes(date.format('YYYY-MM-DD'));
   const isBreakDay = (date: Dayjs) => Object.keys(breakDates).includes(date.format('YYYY-MM-DD'));
 
-  const dateCellRender: CalendarProps<Dayjs>["dateCellRender"] = (value) => {
+  const renderDateCell = (value: Dayjs) => {
     const dateStr = value.format('YYYY-MM-DD');
     const isStreak = isStreakDay(value);
     const isBreak = isBreakDay(value);
@@ -114,7 +106,6 @@ const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName, habitKey, rela
   const handleRelapseSubmit = () => {
     const reason = relapseReason === 'Other' ? customReason : relapseReason;
     const dateStr = selectedDate?.format('YYYY-MM-DD') || '';
-
     const updatedStreak = streakDates.filter(d => d !== dateStr);
     const updatedBreaks = { ...breakDates, [dateStr]: reason };
 
@@ -135,27 +126,22 @@ const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName, habitKey, rela
     setModalVisible(false);
   };
 
-  const headerRender = () => {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 1rem' }}>
-        <Button icon={<LeftOutlined />} onClick={() => setCurrentMonth(prev => prev.subtract(1, 'month'))} />
-        <Title level={4} style={{ margin: 0 }}>{currentMonth.format('MMMM YYYY')}</Title>
-        <Button icon={<RightOutlined />} onClick={() => setCurrentMonth(prev => prev.add(1, 'month'))} />
-      </div>
-    );
-  };
+  const headerRender = () => (
+    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 1rem' }}>
+      <Button icon={<LeftOutlined />} onClick={() => setCurrentMonth(prev => prev.subtract(1, 'month'))} />
+      <Title level={4} style={{ margin: 0 }}>{currentMonth.format('MMMM YYYY')}</Title>
+      <Button icon={<RightOutlined />} onClick={() => setCurrentMonth(prev => prev.add(1, 'month'))} />
+    </div>
+  );
 
   const currentStreak = useMemo(() => {
-   
     let count = 0;
-    let day = dayjs().subtract(1, 'day'); // start from yesterday
-    console.log('streakDates:', streakDates);
+    let day = dayjs().subtract(1, 'day');
     while (streakDates.includes(day.format('YYYY-MM-DD'))) {
       count++;
       day = day.subtract(1, 'day');
     }
     return count;
-
   }, [streakDates]);
 
   return (
@@ -165,8 +151,8 @@ const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName, habitKey, rela
         <Text strong>🔥 Current Streak: {currentStreak} day{currentStreak !== 1 ? 's' : ''}</Text>
         <Calendar
           value={currentMonth}
-          onPanelChange={(val) => setCurrentMonth(val)}
-          dateCellRender={dateCellRender}
+          onPanelChange={setCurrentMonth}
+          cellRender={(value) => renderDateCell(value)}
           headerRender={headerRender}
         />
       </Space>
@@ -188,7 +174,7 @@ const HabitCalendar: React.FC<HabitCalendarProps> = ({ habitName, habitKey, rela
         <p>Why did you break your streak?</p>
         <Select
           style={{ width: '100%', marginBottom: '1rem' }}
-          onChange={value => setRelapseReason(value)}
+          onChange={setRelapseReason}
           value={relapseReason}
         >
           {relapseReasons.map(reason => (

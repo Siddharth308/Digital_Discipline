@@ -7,11 +7,14 @@
 
 
 ✔ Deploy and start using on your phone first @done(25-06-01 10:37)
-☐ make github co-pilot work
+✔ make github co-pilot work @done(25-06-07 11:40)
 ☐ We should able to create a streak for every habit
+    ✔ The component is more generic now , can be reused for any habit @done(25-06-07 13:28)
 ☐ get vscode config shortcuts
+    ☐ why the auto format is not working
 
 Things to Try:
     ☐ Neuomorhic designs
     https://demo.themesberg.com/neumorphism-ui/
     ☐ On some milestones , if we can send a joyful message on whatsapp ( for example 7 days and a Month)
+    ☐ Last streak date or user should log just break dates and rest should be auto calculated
